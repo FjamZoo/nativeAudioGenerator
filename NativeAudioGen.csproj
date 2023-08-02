@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+	<UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <Reference Include="CodeWalker.Core">
+      <HintPath>..\CodeWalker30_dev44\CodeWalker.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FFMpegCore">
+      <HintPath>lib\FFMpegCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

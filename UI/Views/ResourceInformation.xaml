@@ -1,0 +1,47 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NativeAudioGen"
+             xmlns:Views="clr-namespace:NativeAudioGen.UI.Views" x:Class="NativeAudioGen.ResourceInformation"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="397*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Resource Name" FontSize="14" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FFFFFF"/>
+        <TextBox 
+            HorizontalAlignment="Left" 
+            Margin="10,36,0,0" 
+            TextWrapping="Wrap" 
+            Text="nativeAudio" 
+            VerticalAlignment="Top"
+            Background="#25262b"
+            BorderBrush="#25262b"
+            Foreground="#FFFFFF"
+            Width="120"
+        />
+
+        <Label Content="Soundpack Name" FontSize="14" HorizontalAlignment="Left" Margin="150,10,0,0" VerticalAlignment="Top" Foreground="#FFFFFF"/>
+        <TextBox 
+            HorizontalAlignment="Left" 
+            Margin="150,36,0,0" 
+            TextWrapping="Wrap" 
+            Text="dlc_customSounds" 
+            VerticalAlignment="Top"
+            Background="#25262b"
+            Foreground="#FFFFFF"
+            Padding="0"
+            BorderBrush="#25262b"
+            Width="120"
+        />
+
+        <Views:FolderInput HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Width="353" Title="Output Folder"/>
+        <ListBox x:Name="audioList" Margin="567,24,10,59" SelectionChanged="ListView_SelectionChanged" Background="#FF25262B" Foreground="#FFFFFF" BorderBrush="#25262b">
+            <ListViewItem Content="Audio"></ListViewItem>
+        </ListBox>
+    </Grid>
+</UserControl>
