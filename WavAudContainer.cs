@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NativeAudioGen
 {
 
-    struct WavItemEntry
+    public struct AwcItemEntry
     {
         public string Name;
         public string FileName;
@@ -30,6 +30,7 @@ namespace NativeAudioGen
 
     public class WavAudContainer
     {
-        public WavAudContainer() { }
+        public WavAudContainer() {
+        }
     }
 }

@@ -43,5 +43,6 @@
         <ListBox x:Name="audioList" Margin="567,24,10,59" SelectionChanged="ListView_SelectionChanged" Background="#FF25262B" Foreground="#FFFFFF" BorderBrush="#25262b">
             <ListViewItem Content="Audio"></ListViewItem>
         </ListBox>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="567,408,0,0" VerticalAlignment="Top" Width="109" Click="Button_Click"/>
     </Grid>
 </UserControl>

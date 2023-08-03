@@ -7,10 +7,14 @@
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
 	
   <ItemGroup>
     <Reference Include="CodeWalker.Core">
-      <HintPath>..\CodeWalker30_dev44\CodeWalker.Core.dll</HintPath>
+      <HintPath>lib\CodeWalker.Core.dll</HintPath>
     </Reference>
     <Reference Include="FFMpegCore">
       <HintPath>lib\FFMpegCore.dll</HintPath>
