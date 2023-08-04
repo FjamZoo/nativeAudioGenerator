@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NativeAudioGen"
-        xmlns:Views="clr-namespace:NativeAudioGen.UI.Views" x:Class="NativeAudioGen.MainWindow"
+        xmlns:local="clr-namespace:NativeAudioGen.UI.Views"
+        xmlns:Views="clr-namespace:NativeAudioGen.UI.Views" x:Class="NativeAudioGen.UI.Views.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Native Audio Generator" Height="500" Width="800">
     <Grid>
         <StackPanel Background="#1a1b1e">
-            <local:ResourceInformation/>
+            <Views:ResourceInformation RenderTransformOrigin="0.507,0.395"/>
         </StackPanel>
 
     </Grid>

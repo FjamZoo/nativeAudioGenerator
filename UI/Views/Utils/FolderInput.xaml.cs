@@ -4,11 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 
-namespace NativeAudioGen.UI.Views
+namespace NativeAudioGen.UI.Views.Utils
 {
-    /// <summary>
-    /// Interaction logic for FolderInput.xaml
-    /// </summary>
     public partial class FolderInput : UserControl, INotifyPropertyChanged
     {
 
@@ -20,7 +17,7 @@ namespace NativeAudioGen.UI.Views
         }
 
         public string Title { get; set; } = "";
-        public string PathVal { get; set; } = "";
+        private string PathVal { get; set; } = "";
         public string Path
         {
             get => PathVal;
@@ -39,9 +36,7 @@ namespace NativeAudioGen.UI.Views
             InitializeComponent();
             DataContext = this;
         }
-
-
-
+    
         private void FolderInput_Click(object sender, RoutedEventArgs e)
         {
             WinForms.FolderBrowserDialog dialog = new();

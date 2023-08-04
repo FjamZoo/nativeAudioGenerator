@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NativeAudioGen.UI.Views
+namespace NativeAudioGen.UI.Views.Utils
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ListInput.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ListInput : UserControl
     {
-        public MainWindow()
+        public ListInput()
         {
             InitializeComponent();
         }
