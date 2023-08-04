@@ -1,9 +1,13 @@
-﻿using System;
+﻿using FFMpegCore.Enums;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+
 namespace NativeAudioGen.Audio
 {
 
@@ -23,21 +27,24 @@ namespace NativeAudioGen.Audio
 
         public void GenerateFile(string fileName, AwcOptions options)
         {
-            XmlDocument doc = new XmlDocument();
-
+            XmlDocument doc = new();
             XmlNode AWC = doc.CreateElement("AudioWaveContainer");
-            doc.CreateElement("Version")
-                .Attributes?
-                .Append(doc.CreateAttribute("value", "1"))
-                .AppendChild(AWC);
-            doc.CreateElement("ChunkIndices")
-                .Attributes?
-                .Append(doc.CreateAttribute("value", options.chunkIndices.ToString()))
-                .AppendChild(AWC);
-            doc.CreateElement("MultiChannel")
-                .Attributes?
-                .Append(doc.CreateAttribute("value", options.streamFormat.ToString()))
-                .AppendChild(AWC);
+            XmlElement version = doc.CreateElement("Version");
+            version.SetAttribute("value", "1");
+            AWC.AppendChild(version);
+
+            if (options.chunkIndices)
+            {
+                XmlElement chunk = doc.CreateElement("ChunkIndices");
+                chunk.SetAttribute("value", options.chunkIndices ? "True" : "False");
+                AWC.AppendChild(chunk);
+            }
+
+            if (options.streamFormat) {
+                XmlElement multiChannel = doc.CreateElement("MultiChannel");
+                multiChannel.SetAttribute("value", "True");
+                AWC.AppendChild(multiChannel);
+            }
 
             XmlNode streams = doc.CreateElement("Streams");
             //Add streamformat, data and seektable item entry
@@ -46,33 +53,88 @@ namespace NativeAudioGen.Audio
                 XmlNode item = doc.CreateElement("Item");
                 XmlNode Chunks = doc.CreateElement("Chunks");
                 {
-                    XmlNode type = doc.CreateElement("Type");
-                    XmlNode blockSize = doc.CreateElement("BlockSize");
-                    blockSize.Attributes.Append(doc.CreateAttribute("value", "524288"));
+                    XmlNode itemNode = doc.CreateElement("Item");
+
+                    XmlElement type = doc.CreateElement("Type");
+                    XmlElement blockSize = doc.CreateElement("BlockSize");
+                    blockSize.SetAttribute("value", "524288");
                     type.InnerText = "streamformat";
 
-                    Chunks.AppendChild(doc.CreateElement("Item")
-                        .AppendChild(type)
-                        .AppendChild(blockSize));
+                    itemNode.AppendChild(type);
+                    itemNode.AppendChild(blockSize);
+                    Chunks.AppendChild(itemNode);
                 }
 
                 {
+                    XmlNode itemNode = doc.CreateElement("Item");
                     XmlNode type = doc.CreateElement("Type");
                     type.InnerText = "data";
-                    Chunks.AppendChild(doc.CreateElement("Item").AppendChild(type));
+                    itemNode.AppendChild(type);
+                    Chunks.AppendChild(itemNode);
                 }
 
                 {
+                    XmlNode itemNode = doc.CreateElement("Item");
                     XmlNode type = doc.CreateElement("Type");
                     type.InnerText = "seektable";
-                    Chunks.AppendChild(doc.CreateElement("Item").AppendChild(type));
+                    itemNode.AppendChild(type);
+                    Chunks.AppendChild(itemNode);
                 }
 
                 item.AppendChild(Chunks);
                 streams.AppendChild(item);
             }
 
-            Console.WriteLine(doc.ToString());
+            foreach (AwcItemEntry entry in options.entries) {
+                XmlNode itemNode = doc.CreateElement("Item");
+                {
+                    XmlElement name = doc.CreateElement("Name");
+                    name.InnerText = entry.Name;
+                    itemNode.AppendChild(name);
+                }
+
+                {
+                    XmlElement filename = doc.CreateElement("FileName");
+                    filename.InnerText = Path.GetFileNameWithoutExtension(entry.FileName) + ".wav";
+                    itemNode.AppendChild(filename);
+                }
+
+
+                XmlNode streamFormat = doc.CreateElement("StreamFormat");
+
+                if (options.streamFormat)
+                {
+                    {
+                        XmlElement codec = doc.CreateElement("Codec");
+                        codec.InnerText = "ADPCM"; // Streamformat requires ADPCM to function
+                        streamFormat.AppendChild(codec);
+                    }
+
+                    {
+                        XmlElement samples = doc.CreateElement("Samples");
+                        samples.SetAttribute("value", entry.Samples.ToString());
+                        streamFormat.AppendChild(samples);
+                    }
+
+                    {
+                        XmlElement sampleRate = doc.CreateElement("SampleRate");
+                        sampleRate.SetAttribute("value", entry.SampleRate.ToString());
+                        streamFormat.AppendChild(sampleRate);
+                    }
+
+                    {
+                        XmlElement headRoom = doc.CreateElement("Headroom");
+                        headRoom.SetAttribute("value", entry.Headroom.ToString());
+                        streamFormat.AppendChild(headRoom);
+                    }
+                }
+
+                itemNode.AppendChild(streamFormat);
+                streams.AppendChild(itemNode);
+            }
+            AWC.AppendChild(streams);
+            doc.AppendChild(AWC);
+            return;
         }
     }
 }
