@@ -103,8 +103,8 @@
                 Text="-1"
             />
         </StackPanel>
-        <Button Content="Delete" HorizontalAlignment="Left" Margin="493,344,0,0" VerticalAlignment="Top" Width="97" Click="DeleteButton_Click"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="386,344,0,0" VerticalAlignment="Top" Width="97" Click="UpdateButton_Click"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Margin="493,10,0,0" VerticalAlignment="Top" Width="97" Click="DeleteButton_Click"/>
+        <Button Content="Update" HorizontalAlignment="Left" Margin="391,10,0,0" VerticalAlignment="Top" Width="97" Click="UpdateButton_Click"/>
 
     </Grid>
 </Window>

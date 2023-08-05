@@ -16,19 +16,8 @@
                     Width="250"
                     Height="30"
                     HorizontalAlignment="Left"
-                    Background="#25262b"
-                    BorderBrush="#00000000"
-                    Foreground="#FFFFFF"
-                    FontSize="14"
                     Text="{Binding Path}"
-                    SelectionBrush="#A0FFFFFF"
-                    CaretBrush="White">
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
+                />
 
                 <Button
                     Foreground="White"

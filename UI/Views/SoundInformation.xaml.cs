@@ -14,7 +14,6 @@ namespace NativeAudioGen.UI.Views
 
         private AwcItemEntry awcEntry { get; set; }
 
-
         public SoundInformation()
         {
             _app = (App)Application.Current;
@@ -40,7 +39,6 @@ namespace NativeAudioGen.UI.Views
             SampleRateText.Text = awcEntry.SampleRate.ToString();
             DurationText.Text = TimeSpan.FromSeconds(awcEntry.Samples / awcEntry.SampleRate).ToString();
         }
-
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {

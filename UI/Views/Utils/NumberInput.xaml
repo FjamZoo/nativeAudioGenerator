@@ -9,23 +9,12 @@
         <StackPanel>
             <Label Content="{Binding Title}" Foreground="#FFFFFF"/>
             <TextBox
-            Padding="10 6 0 0"
-            Width="{Binding InputWidth, TargetNullValue=auto}"
-            Height="{Binding InputHeight, TargetNullValue=auto}"
-            IsReadOnly="{Binding ReadOnly, TargetNullValue=False}"
-            Background="#25262b"
-            BorderBrush="#00000000"
-            Foreground="#FFFFFF"
-            FontSize="14"
-            Text="{Binding Text}"
-            SelectionBrush="#A0FFFFFF"
-                    CaretBrush="White">
-                <TextBox.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="6"/>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
+                x:Name="num"
+                Width="{Binding InputWidth, TargetNullValue=auto}"
+                Height="{Binding InputHeight, TargetNullValue=auto}"
+                IsReadOnly="{Binding ReadOnly, TargetNullValue=False}"
+                Text="{Binding Text}"
+            />
         </StackPanel>
     </Grid>
 </UserControl>

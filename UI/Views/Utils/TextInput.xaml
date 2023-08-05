@@ -3,29 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NativeAudioGen.UI.Views"
              mc:Ignorable="d" Height="auto" Width="auto">
     <Grid>
         <StackPanel>
             <Label Content="{Binding Title}" Foreground="#FFFFFF"/>
             <TextBox
-            Padding="10 6 0 0"
+            x:Name="box"
             Width="{Binding InputWidth, TargetNullValue=auto}"
             Height="{Binding InputHeight, TargetNullValue=auto}"
             IsReadOnly="{Binding ReadOnly, TargetNullValue=False}"
-            Background="#25262b"
-            BorderBrush="#00000000"
-            Foreground="#FFFFFF"
-            FontSize="14"
             Text="{Binding Text}"
-            SelectionBrush="#A0FFFFFF"
-                    CaretBrush="White">
-                <TextBox.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="6"/>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
+            TextChanged="TextBox_TextChanged"
+            />
         </StackPanel>
     </Grid>
 </UserControl>

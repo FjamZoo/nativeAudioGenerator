@@ -9,37 +9,50 @@ namespace NativeAudioGen.UI.Views.Utils
     /// </summary>
     public partial class TextInput : UserControl, INotifyPropertyChanged
     {
-        private string InputVal { get; set; } = "";
-
         public string Title { get; set; } = "";
         public string InputWidth { get; set; } = "";
         public string InputHeight { get; set; } = "";
-        public bool ReadOnly { get; set; } = false;
+        public bool ReadOnly {
+            get => textBox.IsReadOnly;
+            set
+            {
+                textBox.IsReadOnly = value;
+            }
+        }
+
         public string Text
         {
-            get => InputVal;
+            get => textBox.Text;
             set 
             {
-                if(value != InputVal)
+                if(value != textBox.Text)
                 {
-                    InputVal = value;
+                    textBox.Text = value;
                     PropertyChangeNotify();
                 }
             }
 
         }
 
-        public TextInput()
-        {
-            InitializeComponent();
-            DataContext = this;
-        }
+        public TextBox textBox;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void PropertyChangeNotify([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public TextInput()
+        {
+            InitializeComponent();
+            DataContext = this;
+            textBox = box;
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

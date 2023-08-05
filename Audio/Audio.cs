@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Text.Json;
 using FFMpegCore;
 
 namespace NativeAudioGen.Audio
@@ -47,20 +46,65 @@ namespace NativeAudioGen.Audio
            );
         }
 
-        public static void ConvertAudioToWav(string file)
+        public AudioInformation? GetAudioInformationSync(string file)
+        {
+            if (!File.Exists(file))
+                return null;
+            var info = FFProbe.Analyse(file);
+
+            return new AudioInformation(
+                (int)Math.Round(info.Duration.TotalSeconds * info.PrimaryAudioStream.SampleRateHz),
+                info.PrimaryAudioStream.SampleRateHz,
+                info.Duration,
+                info.PrimaryAudioStream.CodecName,
+                info.PrimaryAudioStream.Channels
+           );
+        }
+
+        public async void ConvertAudioToWav(string file, string outputPath)
         {
             if (!File.Exists(file))
                 return;
-            //AudioInformation? information = GetAudioInformation(file);
-            //if (information == null)
-            //    return;
+            AudioInformation? information = GetAudioInformationSync(file);
+            if (information == null)
+                return;
+            string path = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(file) + ".wav");
+            FFMpegArguments ff = FFMpegArguments
+                .FromFileInput(file);
 
-            /*            var output = FFMpegArguments
-                            .FromFileInput(file)
-                            .OutputToFile(Path.ChangeExtension(file, ".wav"), false, options => options
-                            .WithAudioCodec("pcm_s16le")
-                            .WithAudioBitrate(16)
-                            .WithAudioSamplingRate(information.Value.sampleRate));*/
+            //TODO: This could be cleaner i guess.
+            if(information.Value.channels != 1)
+            {
+                _ = ff.OutputToFile(path, true, options => options
+                    .WithAudioSamplingRate(information.Value.sampleRate)
+                    .WithoutMetadata()
+                    .WithAudioCodec("pcm_s16le")
+                    .WithCustomArgument("-ac 1")
+                    .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
+                    .ForceFormat("wav")
+                    .UsingMultithreading(true)
+                ).ProcessAsynchronously();
+                return;
+            }
+
+            if(information.Value.codec != "pcm_s16le")
+            {
+                _ = ff.OutputToFile(path, true, options => options
+                .WithAudioCodec("pcm_s16le")
+                .WithoutMetadata()
+                .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
+                .WithAudioSamplingRate(information.Value.sampleRate)
+                .ForceFormat("wav")
+                .UsingMultithreading(true)
+                ).ProcessAsynchronously();
+                return;
+            }
+
+            _ =ff.OutputToFile(path, true, options => options
+            .WithoutMetadata()
+            .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
+            .UsingMultithreading(true)
+            ).ProcessAsynchronously();
         }
     }
 }

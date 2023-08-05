@@ -16,26 +16,19 @@ namespace NativeAudioGen.UI.Views
         private App _app;
         private readonly ObservableCollection<string> _awcEntries = new();
 
-        public string ResourceName { get; set; } = "";
-
-        public string SoundPackname { get; set; } = "";
-        public string Output { get; set; } = "";
-
-
         public ResourceInformation()
         {
             _app = (App)Application.Current;
             InitializeComponent();
             audioList.ItemsSource = _awcEntries;
+            ResourceInput.textBox.TextChanged += OnResourceNameChanged;
+            SoundpackInput.textBox.TextChanged += OnSoundpackNameChanged;
         }
 
-
-        private bool IsOutputVaild()
+        private bool CanAddAWCEntries()
         {
-            if(Output == "" || !Directory.Exists(Output))
-            {
+            if(_app.Output == "" || !Directory.Exists(_app.Output) || ResourceInput.Text == "" || SoundpackInput.Text == "")
                 return false;
-            }
             return true;
         }
 
@@ -65,7 +58,6 @@ namespace NativeAudioGen.UI.Views
             }
         }
 
-
         protected void RefreshAudioList()
         {
             _awcEntries.Clear();
@@ -78,8 +70,20 @@ namespace NativeAudioGen.UI.Views
 
         private void OnFolderPathChanged(object sender, PropertyChangedEventArgs e)
         {
-            Output = OutputFolder.Path;
-            AddAudioButton.IsEnabled = IsOutputVaild();
+            _app.Output = OutputFolder.Path;
+            AddAudioButton.IsEnabled = CanAddAWCEntries();
+        }
+
+        private void OnResourceNameChanged(object sender, TextChangedEventArgs e)
+        {
+            _app.ResourceName = ResourceInput.textBox.Text;
+            AddAudioButton.IsEnabled = CanAddAWCEntries();
+        }
+
+        private void OnSoundpackNameChanged(object sender, TextChangedEventArgs e)
+        {
+            _app.SoundpackName = SoundpackInput.Text;
+            AddAudioButton.IsEnabled = CanAddAWCEntries();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -87,14 +91,18 @@ namespace NativeAudioGen.UI.Views
             WinForms.OpenFileDialog dialog = new()
             {
                 Filter = "Audio Files|*.mp3;*.wav;*.ogg;.mp4",
+                Multiselect = true,
                 Title = "Select audio"
             };
 
             if (dialog.ShowDialog() == WinForms.DialogResult.OK)
             {
-                string path = dialog.FileName;
-                _awcEntries.Add(Path.GetFileNameWithoutExtension(path));
-                await _app.AudContainer.AddAudio(path);
+                string[] paths = dialog.FileNames;
+                foreach(string path in paths)
+                {
+                    _awcEntries.Add(Path.GetFileNameWithoutExtension(path));
+                    await _app.AudContainer.AddAudio(path);
+                }
             }
         }
 

@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:NativeAudioGen"
              StartupUri="UI/Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Padding" Value="10 6 0 0" />
+            <Setter Property="Background" Value="#25262b" />
+            <Setter Property="BorderBrush" Value="#00000000" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="SelectionBrush" Value="#A0FFFFFF" />
+            <Setter Property="CaretBrush" Value="White" />
+        </Style>
     </Application.Resources>
 </Application>
