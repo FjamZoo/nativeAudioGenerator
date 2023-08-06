@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Text;
-using System.Diagnostics;
-using System.DirectoryServices;
 
 namespace NativeAudioGen.Audio
 {
