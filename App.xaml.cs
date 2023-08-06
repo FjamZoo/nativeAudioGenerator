@@ -1,5 +1,7 @@
 ﻿using NativeAudioGen.Audio;
 using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace NativeAudioGen
 {
@@ -39,5 +41,9 @@ namespace NativeAudioGen
         }
 
         public string SoundpackName = "";
+
+
+        public static void ShowNonBlockingDialog(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+            => new Thread(() => MessageBox.Show(text, caption, buttons, icon)).Start();
     }
 }

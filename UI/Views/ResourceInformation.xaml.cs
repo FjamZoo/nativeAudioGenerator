@@ -12,33 +12,40 @@ namespace NativeAudioGen.UI.Views
     public partial class ResourceInformation : UserControl
     {
 
-        private SoundInformation? _soundInformation;
-        private App _app;
+        protected SoundInformation? _soundInformation;
+        protected App _app;
         private readonly ObservableCollection<string> _awcEntries = new();
 
         public ResourceInformation()
         {
             _app = (App)Application.Current;
             InitializeComponent();
+            DataContext = this;
             audioList.ItemsSource = _awcEntries;
             ResourceInput.textBox.TextChanged += OnResourceNameChanged;
             SoundpackInput.textBox.TextChanged += OnSoundpackNameChanged;
         }
 
-        private bool CanAddAWCEntries()
+        protected bool CanAddAWCEntries()
         {
             if(_app.Output == "" || !Directory.Exists(_app.Output) || ResourceInput.Text == "" || SoundpackInput.Text == "")
                 return false;
             return true;
         }
 
+        protected void RefreshAudioList()
+        {
+            _awcEntries.Clear();
+            List<string> entries = _app.AudContainer.GetAudioNames();
+            for (int i = 0; i < entries.Count; i++)
+                _awcEntries.Add(entries[i]);
+        }
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count <= 0)
-                return;
+            if (e.AddedItems.Count <= 0) return;
             object? item = e.AddedItems[0];
-            if(item == null)
-                return;
+            if(item == null) return;
+         
             AwcItemEntry? audio = _app.AudContainer.GetAudio(item.ToString());
             if(audio == null)
             {
@@ -46,26 +53,14 @@ namespace NativeAudioGen.UI.Views
                 return;
             }
 
-            if (_soundInformation == null)
+            if (_soundInformation != null) return;
+            _soundInformation = new(audio.Value.FileLocation, audio.Value);
+            _soundInformation.Show();
+            _soundInformation.Closed += delegate
             {
-                _soundInformation = new(audio.Value.FileLocation, audio.Value);
-                _soundInformation.Show();
-                _soundInformation.Closed += delegate
-                {
-                    RefreshAudioList();
-                    _soundInformation = null;
-                };
-            }
-        }
-
-        protected void RefreshAudioList()
-        {
-            _awcEntries.Clear();
-            List<string> entries = _app.AudContainer.GetAudioNames();
-            for (int i = 0; i < entries.Count; i++) 
-            {
-                _awcEntries.Add(entries[i]);
-            }
+                RefreshAudioList();
+                _soundInformation = null;
+            };
         }
 
         private void OnFolderPathChanged(object sender, PropertyChangedEventArgs e)
@@ -78,6 +73,7 @@ namespace NativeAudioGen.UI.Views
         {
             _app.ResourceName = ResourceInput.textBox.Text;
             AddAudioButton.IsEnabled = CanAddAWCEntries();
+
         }
 
         private void OnSoundpackNameChanged(object sender, TextChangedEventArgs e)
@@ -86,7 +82,7 @@ namespace NativeAudioGen.UI.Views
             AddAudioButton.IsEnabled = CanAddAWCEntries();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void AddAWCButton_Click(object sender, RoutedEventArgs e)
         {
             WinForms.OpenFileDialog dialog = new()
             {
@@ -101,12 +97,28 @@ namespace NativeAudioGen.UI.Views
                 foreach(string path in paths)
                 {
                     _awcEntries.Add(Path.GetFileNameWithoutExtension(path));
-                    await _app.AudContainer.AddAudio(path);
+                    _ = _app.AudContainer.AddAudio(path);
+                    AddDat54Button.IsEnabled = true;
                 }
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void BuildResourceButton_Click(object sender, RoutedEventArgs e)
+        {
+            _app.AudContainer.BuildAwc();
+        }
+
+        private void ClearAWCButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddDat54Button.IsEnabled = false;
+        }
+
+        private void AddDat54Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ClearDat54Button_Click(object sender, RoutedEventArgs e)
         {
             _app.AudContainer.BuildAwc();
         }
