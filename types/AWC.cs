@@ -8,6 +8,11 @@ namespace NativeAudioGen.Types
         ADPCM = 4
     }
 
+    public struct AWCMarker
+    {
+
+    }
+
     public class AWCItem
     {
         public string Name;

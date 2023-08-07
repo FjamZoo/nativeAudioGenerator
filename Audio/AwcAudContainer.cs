@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CodeWalker.GameFiles;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace NativeAudioGen.Audio
             data = new()
             {
                 Name = Path.GetFileNameWithoutExtension(path),
-                File = Path.GetFileName(path),
+                File = Path.GetFileNameWithoutExtension(path) + ".wav",
                 Codec = Types.AWCCodec.ADPCM,
                 Samples = audio.samples,
                 SampleRate = audio.sampleRate

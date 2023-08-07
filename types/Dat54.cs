@@ -605,8 +605,6 @@ namespace NativeAudioGen.Types
             throw new System.NotImplementedException();
         }
     }
-
-
     public struct SoundSetEntry
     {
         public string Name;

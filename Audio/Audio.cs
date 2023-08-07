@@ -72,39 +72,17 @@ namespace NativeAudioGen.Audio
             FFMpegArguments ff = FFMpegArguments
                 .FromFileInput(file);
 
-            //TODO: This could be cleaner i guess.
-            if(information.Value.channels != 1)
+            _ =ff.OutputToFile(path, true, opt =>
             {
-                _ = ff.OutputToFile(path, true, options => options
-                    .WithAudioSamplingRate(information.Value.sampleRate)
-                    .WithoutMetadata()
-                    .WithAudioCodec("pcm_s16le")
-                    .WithCustomArgument("-ac 1")
-                    .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
-                    .ForceFormat("wav")
-                    .UsingMultithreading(true)
-                ).ProcessAsynchronously();
-                return;
-            }
-
-            if(information.Value.codec != "pcm_s16le")
-            {
-                _ = ff.OutputToFile(path, true, options => options
-                .WithAudioCodec("pcm_s16le")
-                .WithoutMetadata()
-                .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
-                .WithAudioSamplingRate(information.Value.sampleRate)
-                .ForceFormat("wav")
-                .UsingMultithreading(true)
-                ).ProcessAsynchronously();
-                return;
-            }
-
-            _ =ff.OutputToFile(path, true, options => options
-            .WithoutMetadata()
-            .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
-            .UsingMultithreading(true)
-            ).ProcessAsynchronously();
+               opt.WithAudioSamplingRate(information.Value.sampleRate)
+               .WithoutMetadata()
+               .WithCustomArgument("-fflags +bitexact -flags:v +bitexact -flags:a +bitexact")
+               .WithAudioCodec("pcm_s16le")
+               .ForceFormat("wav")
+               .UsingMultithreading(true);
+                if (information.Value.channels != 1)
+                    opt.WithCustomArgument("-ac 1");
+            }).ProcessAsynchronously();
         }
     }
 }
