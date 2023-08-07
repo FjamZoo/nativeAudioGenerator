@@ -10,7 +10,6 @@ namespace NativeAudioGen.Types
 
     public class AWCItem
     {
-
         public string Name;
         public string File;
 

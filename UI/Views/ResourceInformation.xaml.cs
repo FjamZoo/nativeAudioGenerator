@@ -46,7 +46,7 @@ namespace NativeAudioGen.UI.Views
             object? item = e.AddedItems[0];
             if(item == null) return;
          
-            AwcItemEntry? audio = _app.AudContainer.GetAudio(item.ToString());
+            AwcEntry? audio = _app.AudContainer.GetAudio(item.ToString());
             if(audio == null)
             {
                 MessageBox.Show("Unable to retrive audio with name " + item.ToString(), "Missing entry", MessageBoxButton.OK, MessageBoxImage.Error);

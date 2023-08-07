@@ -4,6 +4,7 @@ using System.Xml;
 namespace NativeAudioGen.Types
 {
 
+    /*
     public static string[] datCategories = {
             "ambience",
             "ambience_birds",
@@ -232,9 +233,9 @@ namespace NativeAudioGen.Types
             "weather_thunder",
             "weather_wind",
             "weather_wind_foliage"
-    };
+    };*/
 
-    enum DatFlags
+    enum DatFlags : uint
     {
         Flags2 = 0x00000001,
         Unk01 = 0x00000002,

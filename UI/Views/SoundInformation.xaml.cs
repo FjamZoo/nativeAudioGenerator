@@ -12,16 +12,16 @@ namespace NativeAudioGen.UI.Views
 
         private string path { get; set; } = string.Empty;
 
-        private AwcItemEntry awcEntry { get; set; }
+        private AwcEntry awcEntry { get; set; }
 
         public SoundInformation()
         {
             _app = (App)Application.Current;
             InitializeComponent();
-            awcEntry = new AwcItemEntry();
+            awcEntry = new AwcEntry();
         }
 
-        public SoundInformation(string path, AwcItemEntry awcEntry)
+        public SoundInformation(string path, AwcEntry awcEntry)
         {
             _app = (App)Application.Current;
             this.path = path;
@@ -35,20 +35,20 @@ namespace NativeAudioGen.UI.Views
             SoundName.Text = Path.GetFileNameWithoutExtension(path);
             Title = string.Format("Editing {0}...", SoundName.Text);
             FileName.Text = Path.GetFileName(path);
-            SamplesText.Text = awcEntry.Samples.ToString();
-            SampleRateText.Text = awcEntry.SampleRate.ToString();
-            DurationText.Text = TimeSpan.FromSeconds(awcEntry.Samples / awcEntry.SampleRate).ToString();
+            SamplesText.Text = awcEntry.data.Samples.ToString();
+            SampleRateText.Text = awcEntry.data.SampleRate.ToString();
+            DurationText.Text = TimeSpan.FromSeconds(awcEntry.data.Samples / awcEntry.data.SampleRate).ToString();
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            AwcItemEntry newEntry = awcEntry;
-            newEntry.Headroom = Convert.ToInt32(HeadroomEntry.Text);
-            newEntry.PlayBegin = Convert.ToInt32(PlayBeginEntry.Text);
-            newEntry.PlayEnd = Convert.ToInt32(PlayEndEntry.Text);
-            newEntry.LoopBegin = Convert.ToInt32(LoopBeginEntry.Text);
-            newEntry.LoopEnd = Convert.ToInt32(LoopEndEntry.Text);
-            newEntry.LoopPoint = Convert.ToInt32(LoopPointEntry.Text);
+            AwcEntry newEntry = awcEntry;
+            newEntry.data.Headroom = Convert.ToInt32(HeadroomEntry.Text);
+            newEntry.data.PlayBegin = Convert.ToInt32(PlayBeginEntry.Text);
+            newEntry.data.PlayEnd = Convert.ToInt32(PlayEndEntry.Text);
+            newEntry.data.LoopBegin = Convert.ToInt32(LoopBeginEntry.Text);
+            newEntry.data.LoopEnd = Convert.ToInt32(LoopEndEntry.Text);
+            newEntry.data.LoopPoint = Convert.ToInt32(LoopPointEntry.Text);
             _app.AudContainer.UpdateAudio(SoundName.Text, newEntry);
             MessageBox.Show("Successfully updated entry", "Success");
         }

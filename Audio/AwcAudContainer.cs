@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,35 +6,22 @@ using System.Windows;
 
 namespace NativeAudioGen.Audio
 {
-    public struct AwcItemEntry
+    public struct AwcEntry
     {
         public string FileLocation;
-        public string Name;
-        public string FileName;
+        public Types.AWCItem data;
 
-        public string Codec;
-        public int Samples;
-        public int SampleRate;
-        public int Headroom = -200;
-
-        public int PlayBegin = 0;
-        public int PlayEnd = 0;
-
-        public int LoopBegin = 0;
-        public int LoopEnd = 0;
-        public int LoopPoint = -1;
-        public int Peak = 0;
-
-
-        public AwcItemEntry(string path, AudioInformation audio)
+        public AwcEntry(string path, AudioInformation audio)
         {
             FileLocation = path;
-            Name = Path.GetFileNameWithoutExtension(path);
-            FileName = Path.GetFileName(path);
-
-            Codec = "ADPCM";
-            Samples = audio.samples;
-            SampleRate = audio.sampleRate;
+            data = new()
+            {
+                Name = Path.GetFileNameWithoutExtension(path),
+                File = Path.GetFileName(path),
+                Codec = Types.AWCCodec.ADPCM,
+                Samples = audio.samples,
+                SampleRate = audio.sampleRate
+            };
         }
     }
 
@@ -44,19 +30,19 @@ namespace NativeAudioGen.Audio
         public bool streamFormat;
         public bool chunkIndices;
 
-        public List<AwcItemEntry> entries;
+        public List<AwcEntry> entries;
     }
 
     public class AwcAudContainer
     {
 
         private Audio _audio;
-        private readonly Dictionary<string, AwcItemEntry> m_audio = new();
+        private readonly Dictionary<string, AwcEntry> m_audio = new();
         public AwcAudContainer()
         {
             _audio = new();
         }
-        public async Task<AwcItemEntry?> AddAudio(string path)
+        public async Task<AwcEntry?> AddAudio(string path)
         {
             string name = Path.GetFileNameWithoutExtension(path);
             if (!File.Exists(path))
@@ -72,21 +58,21 @@ namespace NativeAudioGen.Audio
             AudioInformation? info = await _audio.GetAudioInformation(path);
             if (info == null)
                 return null;
-            AwcItemEntry entry = new(path, (AudioInformation)info);
+            AwcEntry entry = new(path, (AudioInformation)info);
             m_audio.Add(Path.GetFileNameWithoutExtension(path), entry);
             return entry;
         }
 
-        public void UpdateAudio(string name, AwcItemEntry entry)
+        public void UpdateAudio(string name, AwcEntry entry)
         {
             if (!m_audio.ContainsKey(name)) 
                 return;
             m_audio[name] = entry;
         }
 
-        public AwcItemEntry? GetAudio(string name)
+        public AwcEntry? GetAudio(string name)
         {
-            if (m_audio.TryGetValue(name, out AwcItemEntry entry)) return entry;
+            if (m_audio.TryGetValue(name, out AwcEntry entry)) return entry;
             return null;
         }
 
@@ -124,7 +110,7 @@ namespace NativeAudioGen.Audio
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            foreach(AwcItemEntry entry in m_audio.Values.ToList())
+            foreach(AwcEntry entry in m_audio.Values.ToList())
                 _audio.ConvertAudioToWav(entry.FileLocation, path);
         }
     }

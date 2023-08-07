@@ -10,7 +10,6 @@ namespace NativeAudioGen.Audio
 {
     class Resource
     {
-
         private App _app;
         private static string[] _manifest = {
             "fx_version 'cerulean'",
@@ -95,12 +94,10 @@ namespace NativeAudioGen.Audio
                 XmlNode Chunks = doc.CreateElement("Chunks");
                 {
                     XmlNode itemNode = doc.CreateElement("Item");
-
                     XmlElement type = doc.CreateElement("Type");
                     XmlElement blockSize = doc.CreateElement("BlockSize");
                     blockSize.SetAttribute("value", "524288");
                     type.InnerText = "streamformat";
-
                     itemNode.AppendChild(type);
                     itemNode.AppendChild(blockSize);
                     Chunks.AppendChild(itemNode);
@@ -124,114 +121,8 @@ namespace NativeAudioGen.Audio
                 item.AppendChild(Chunks);
                 streams.AppendChild(item);
             }
-
-            foreach (AwcItemEntry entry in options.entries)
-            {
-                XmlNode itemNode = doc.CreateElement("Item");
-                {
-                    XmlElement name = doc.CreateElement("Name");
-                    name.InnerText = entry.Name;
-                    itemNode.AppendChild(name);
-                }
-
-                {
-                    XmlElement filename = doc.CreateElement("FileName");
-                    filename.InnerText = Path.GetFileNameWithoutExtension(entry.FileName) + ".wav";
-                    itemNode.AppendChild(filename);
-                }
-
-                XmlNode chunks = doc.CreateElement("Chunks");
-                if (!options.streamFormat)
-                {
-                    {
-                        XmlNode typeItem = doc.CreateElement("Item");
-                        XmlNode type = doc.CreateElement("Type");
-                        type.InnerText = "peak";
-                        typeItem.AppendChild(type);
-                        chunks.AppendChild(typeItem);
-                    }
-
-                    {
-                        XmlNode typeItem = doc.CreateElement("Item");
-                        XmlNode type = doc.CreateElement("Type");
-                        type.InnerText = "data";
-                        typeItem.AppendChild(type);
-                        chunks.AppendChild(typeItem);
-                    }
-                }
-
-                XmlNode itemEntry = doc.CreateElement(options.streamFormat ? "StreamFormat" : "Item");
-                if (!options.streamFormat)
-                {
-                    XmlElement format = doc.CreateElement("Type");
-                    format.InnerText = "format";
-                    itemEntry.AppendChild(format);
-                }
-
-                {
-                    XmlElement codec = doc.CreateElement("Codec");
-                    codec.InnerText = options.streamFormat ? "ADPCM" : entry.Codec; // Streamformat requires ADPCM to function
-                    itemEntry.AppendChild(codec);
-                }
-
-                {
-                    XmlElement samples = doc.CreateElement("Samples");
-                    samples.SetAttribute("value", entry.Samples.ToString());
-                    itemEntry.AppendChild(samples);
-                }
-
-                {
-                    XmlElement sampleRate = doc.CreateElement("SampleRate");
-                    sampleRate.SetAttribute("value", entry.SampleRate.ToString());
-                    itemEntry.AppendChild(sampleRate);
-                }
-
-                {
-                    XmlElement headRoom = doc.CreateElement("Headroom");
-                    headRoom.SetAttribute("value", entry.Headroom.ToString());
-                    itemEntry.AppendChild(headRoom);
-                }
-
-                //TODO: Verify if streamFormat can compile or even use these options
-                if (!options.streamFormat)
-                {
-                    {
-                        XmlElement playBegin = doc.CreateElement("PlayBegin");
-                        playBegin.SetAttribute("value", entry.PlayBegin.ToString());
-                        itemEntry.AppendChild(playBegin);
-                    }
-                    {
-                        XmlElement playEnd = doc.CreateElement("PlayEnd");
-                        playEnd.SetAttribute("value", entry.PlayEnd.ToString());
-                        itemEntry.AppendChild(playEnd);
-                    }
-                    {
-                        XmlElement loopBegin = doc.CreateElement("LoopBegin");
-                        loopBegin.SetAttribute("value", entry.LoopBegin.ToString());
-                        itemEntry.AppendChild(loopBegin);
-                    }
-                    {
-                        XmlElement loopEnd = doc.CreateElement("LoopEnd");
-                        loopEnd.SetAttribute("value", entry.LoopEnd.ToString());
-                        itemEntry.AppendChild(loopEnd);
-                    }
-                    {
-                        XmlElement loopPoint = doc.CreateElement("LoopPoint");
-                        loopPoint.SetAttribute("value", entry.LoopPoint.ToString());
-                        itemEntry.AppendChild(loopPoint);
-                    }
-                    {
-                        XmlElement peakUnk = doc.CreateElement("Peak");
-                        peakUnk.SetAttribute("unk", entry.Peak.ToString());
-                        itemEntry.AppendChild(peakUnk);
-                    }
-                    chunks.AppendChild(itemEntry);
-                    itemNode.AppendChild(chunks);
-                }
-                else
-                    itemNode.AppendChild(itemEntry);
-                streams.AppendChild(itemNode);
-            }
+            foreach (AwcEntry entry in options.entries)
+                streams.AppendChild(entry.data.GenerateXML(doc, options.streamFormat));
             AWC.AppendChild(streams);
             doc.AppendChild(AWC);
 
