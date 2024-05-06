@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="NativeAudioGen.UI.Views.Utils.TextInput"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="auto" Width="auto">
+    <Grid>
+        <StackPanel>
+            <Label Content="{Binding Title}" Foreground="#FFFFFF"/>
+            <TextBox
+            x:Name="box"
+            Width="{Binding InputWidth, TargetNullValue=auto}"
+            Height="{Binding InputHeight, TargetNullValue=auto}"
+            IsReadOnly="{Binding ReadOnly, TargetNullValue=False}"
+            Text="{Binding Text}"
+            TextChanged="TextBox_TextChanged"
+            />
+        </StackPanel>
+    </Grid>
+</UserControl>
